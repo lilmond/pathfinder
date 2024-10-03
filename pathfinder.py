@@ -112,8 +112,16 @@ def check_http(url: str, headers: dict = None, proxy: str = None, no_verify: boo
         if line1_response.endswith(b"\r\n"):
             break
     
-    logger.info(f"URL: {Colors.BLUE}{url}{Colors.RESET} | {Colors.GREEN}{line1_response.decode().strip()}{Colors.RESET}")
+    line1_response = line1_response.decode().strip()
+    http_version, http_status_code = line1_response.split(" ", 1)
+    
+    if http_status_code.startswith("2"):
+        color = Colors.GREEN
+    else:
+        color = Colors.RED
 
+    logger.info(f"URL: {Colors.BLUE}{url}{Colors.RESET} | {color}{http_status_code}{Colors.RESET}")
+        
 def clear_console():
     if sys.platform == "win32":
         os.system("cls")
